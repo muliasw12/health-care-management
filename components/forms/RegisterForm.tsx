@@ -16,10 +16,11 @@ import { UserFormValidation } from "@/lib/validation"
 import { createUser } from "@/lib/actions/patient.actions"
 import { useRouter } from "next/navigation"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Doctors, GenderOptions } from "@/constants";
+import { Doctors, GenderOptions, IdentificationTypes } from "@/constants";
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
+import FileUploader from "../FileUploader";
 
 export enum FORM_TYPE {
   INPUT = 'input',
@@ -249,6 +250,40 @@ const RegisterForm = ({ user }: { user: User }) => {
             <h2 className="sub-header">Identification and Verification</h2>
           </div>
         </section>
+
+        <CustomFormField
+          fieldType={FORM_TYPE.SELECT} 
+          control={form.control}
+          name="identification_type"
+          label="Identification Type"
+          placeholder="Select an identification type"
+        >
+          {IdentificationTypes.map((type) => (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          ))}
+        </CustomFormField>
+
+        <CustomFormField
+          fieldType={FORM_TYPE.INPUT} 
+          control={form.control}
+          name="identification_number"
+          label="Identification Number"
+          placeholder="Please enter your identification number"
+        />
+
+        <CustomFormField
+          fieldType={FORM_TYPE.SKELETON} 
+          control={form.control}
+          name="identification_document"
+          label="Scanned copy of Identification Document"
+          renderSkeleton={(field) => (
+            <FormControl>
+              <FileUploader files={field.value} onChange={field.onChange}/>
+            </FormControl>
+          )}
+        />
 
         <SubmitButton isLoading={isLoading}>Submit</SubmitButton>
       </form>
