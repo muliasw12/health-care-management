@@ -16,8 +16,10 @@ import { UserFormValidation } from "@/lib/validation"
 import { createUser } from "@/lib/actions/patient.actions"
 import { useRouter } from "next/navigation"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { GenderOptions } from "@/constants";
+import { Doctors, GenderOptions } from "@/constants";
 import { Label } from "../ui/label";
+import { SelectItem } from "../ui/select";
+import Image from "next/image";
 
 export enum FORM_TYPE {
   INPUT = 'input',
@@ -129,15 +131,125 @@ const RegisterForm = ({ user }: { user: User }) => {
             )}
           />
         </div>
-        <div className="flex flex-col gap-6 xl:flex-row">
 
-        </div>
         <div className="flex flex-col gap-6 xl:flex-row">
-
+          <CustomFormField
+            fieldType={FORM_TYPE.INPUT} 
+            control={form.control}
+            name="address"
+            label="Address"
+            placeholder="Please enter your address"
+          />
+          <CustomFormField
+            fieldType={FORM_TYPE.INPUT} 
+            control={form.control}
+            name="occupation"
+            label="Occupation"
+            placeholder="Please enter your occupation"
+          />
         </div>
+
         <div className="flex flex-col gap-6 xl:flex-row">
-
+          <CustomFormField
+            fieldType={FORM_TYPE.INPUT} 
+            control={form.control}
+            name="emergency_contact_name"
+            label="Emergency Contact Name"
+          />
+          <CustomFormField
+            fieldType={FORM_TYPE.PHONE_INPUT} 
+            control={form.control}
+            name="emergency_contact_number"
+            label="Emergency Contact Number"
+          />
         </div>
+
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Medical Information</h2>
+          </div>
+        </section>
+
+        <CustomFormField
+          fieldType={FORM_TYPE.SELECT} 
+          control={form.control}
+          name="primary_physician"
+          label="Primary Physician"
+          placeholder="Select a physician"
+        >
+          {Doctors.map((doctor) => (
+            <SelectItem key={doctor.name} value={doctor.name}>
+              <div className="flex cursor-pointer items-center gap-2">
+                <Image 
+                  src={doctor.image}
+                  width={32}
+                  height={32}
+                  alt={doctor.name}
+                  className="rounded-full border border-dark-500"
+                />
+                <p>{doctor.name}</p>
+              </div>
+            </SelectItem>
+          ))}
+        </CustomFormField>
+
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FORM_TYPE.INPUT} 
+            control={form.control}
+            name="insurance_provider"
+            label="Insurance Provider"
+            placeholder="Please enter your insurance provider"
+          />
+          <CustomFormField
+            fieldType={FORM_TYPE.INPUT} 
+            control={form.control}
+            name="insurance_policy_number"
+            label="Insurance Policy Number"
+            placeholder="Please enter your insurance policy number"
+          />
+        </div>
+
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FORM_TYPE.TEXTAREA} 
+            control={form.control}
+            name="allergies"
+            label="Allergies (If any)"
+            placeholder="Please enter here if you have any allergies"
+          />
+          <CustomFormField
+            fieldType={FORM_TYPE.TEXTAREA} 
+            control={form.control}
+            name="current_medication"
+            label="Current Medication (If any)"
+            placeholder="Please enter your current medication"
+          />
+        </div>
+
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FORM_TYPE.TEXTAREA} 
+            control={form.control}
+            name="family_medical_history"
+            label="Family Medical History"
+            placeholder="Please enter here if you have any family medical history"
+          />
+          <CustomFormField
+            fieldType={FORM_TYPE.TEXTAREA} 
+            control={form.control}
+            name="past_medical_history"
+            label="Past Medical History"
+            placeholder="Please enter your past medical history"
+          />
+        </div>
+
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Identification and Verification</h2>
+          </div>
+        </section>
+
         <SubmitButton isLoading={isLoading}>Submit</SubmitButton>
       </form>
     </Form>
