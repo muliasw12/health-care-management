@@ -11,12 +11,13 @@ import {
 import CustomFormField from "../CustomFormField"
 import SubmitButton from "../SubmitButton"
 import { useState } from "react"
-import { UserFormValidation } from "@/lib/validation"
+import { getAppointmentSchema } from "@/lib/validation"
 import { createUser } from "@/lib/actions/patient.actions"
 import { useRouter } from "next/navigation"
 import { Doctors } from "@/constants";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
+import { createAppointment } from "@/lib/actions/appointment.actions";
 
 export enum FORM_TYPE {
   INPUT = 'input',
@@ -37,24 +38,54 @@ const AppointmentForm = ({ user_id, patient_id, type }: {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const AppointmentFormValidation = getAppointmentSchema(type);
+
+  const form = useForm<z.infer<typeof AppointmentFormValidation>>({
+    resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      primary_physician: "",
+      schedule: new Date(),
+      reason: "",
+      note: "",
+      cancellation_reason: ""
     },
   });
 
-  async function onSubmit({ name, email, phone }: z.infer<typeof UserFormValidation>) {
+  async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
     setIsLoading(true);
 
+    let status;
+    switch (type) {
+      case 'schedule':
+        status = 'scheduled';
+        break;
+      case 'cancel':
+        status = 'canceled';
+        break;
+      default:
+        status = 'pending';
+        break;
+    }
+
     try {
-      const userData = { name, email, phone };
+      if (type === 'create' && patient_id) {
+        const appointmentData = {
+          user_id, 
+          patient: patient_id,
+          primary_physician: values.primary_physician,
+          schedule: new Date(values.schedule),
+          reason: values.reason!,
+          note: values.note,
+          status: status as Status
+        }
+        const appointment = await createAppointment(appointmentData);
 
-      const user = await createUser(userData);
+        if (appointment) {
+          form.reset();
+          router.push(`/patients/${user_id}/new-appointment/success?appointment_id=${appointment.$id}`);
+        }
+      }
 
-      if (user) router.push(`/patients/${user.$id}/register`);
 
     } catch (error) {
       console.log(error)
@@ -130,7 +161,7 @@ const AppointmentForm = ({ user_id, patient_id, type }: {
               <CustomFormField 
                 fieldType={FORM_TYPE.TEXTAREA}
                 control={form.control}
-                name="notes"
+                name="note"
                 label="Notes"
                 placeholder="Enter notes"
               />
