@@ -60,7 +60,7 @@ const AppointmentForm = ({ user_id, patient_id, type }: {
         status = 'scheduled';
         break;
       case 'cancel':
-        status = 'canceled';
+        status = 'cancelled';
         break;
       default:
         status = 'pending';
