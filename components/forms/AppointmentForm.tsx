@@ -46,10 +46,10 @@ const AppointmentForm = ({ user_id, patient_id, type, appointment, setOpen }: {
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primary_physician: appointment ? appointment.primary_physician : "",
-      schedule: appointment ? new Date(appointment.schedule) : new Date(),
-      reason: appointment ? appointment.reason : "",
-      note: appointment ? appointment.note : "",
+      primary_physician: appointment ? appointment?.primary_physician : "",
+      schedule: appointment ? new Date(appointment?.schedule) : new Date(Date.now()),
+      reason: appointment ? appointment?.reason : "",
+      note: appointment?.note || "",
       cancellation_reason: appointment?.cancellation_reason || "",
     },
   });
