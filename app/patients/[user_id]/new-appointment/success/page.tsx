@@ -59,11 +59,19 @@ const Success = async ({ params: { user_id }, searchParams}: SearchParamProps) =
           </div>
         </section>
 
-        <Button variant="outline" className="shad-primary-btn" asChild>
-          <Link href={`/patients/${user_id}/new-appointment`}>
-            New Appointment
-          </Link>
-        </Button>
+        <div className="flex flex-row items-center gap-8">
+          <Button variant="outline" className="shad-primary-btn" asChild>
+            <Link href={`/patients/${user_id}/new-appointment`}>
+              New Appointment
+            </Link>
+          </Button>
+
+          <Button variant="outline" className="shad-primary-btn px-8" asChild>
+            <Link href="/">
+              Back to Home
+            </Link>
+          </Button>
+        </div>
 
         <p className="copyright">© 2024 Careplus</p>
       </div>
