@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form"
 import CustomFormField from "../CustomFormField"
 import SubmitButton from "../SubmitButton"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { getAppointmentSchema } from "@/lib/validation"
 import { createUser } from "@/lib/actions/patient.actions"
 import { useRouter } from "next/navigation"
@@ -36,7 +36,7 @@ const AppointmentForm = ({ user_id, patient_id, type, appointment, setOpen }: {
     patient_id: string; 
     type: "create" | "cancel" | "schedule";
     appointment?: Appointment;
-    setOpen: (open: boolean) => void;
+    setOpen?: Dispatch<SetStateAction<boolean>>;
   }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
