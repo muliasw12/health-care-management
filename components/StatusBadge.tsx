@@ -11,8 +11,8 @@ const StatusBadge = ({ status }: { status: Status }) => {
       'bg-red-600': status === 'cancelled'
     })}>
       <Image 
-        src={StatusIcon[status]}
-        alt={status}
+        src={StatusIcon[status]!}
+        alt={status!}
         width={24}
         height={24}
         className="h-fit w-3"

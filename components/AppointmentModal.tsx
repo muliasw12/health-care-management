@@ -1,4 +1,6 @@
-import React from 'react'
+"use client";
+
+import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -7,19 +9,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Button } from './ui/button';
+import AppointmentForm from './forms/AppointmentForm';
+import { Appointment } from '@/types/appwrite.types';
 
-const AppointmentModal = () => {
+const AppointmentModal = ({ type, patient_id, user_id, appointment }:  {
+  type: 'schedule' | 'cancel',
+  patient_id: string,
+  user_id: string,
+  appointment?: Appointment
+}) => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
-      <DialogTrigger>Open</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" className={`capitalize ${type === 'schedule' && 'text-green-500'}`}>
+          {type}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="shad-dialog sm:max-w-md">
+        <DialogHeader className="mb-4 space-y-3">
+          <DialogTitle className="capitalize">{type} Appointment</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your account
-            and remove your data from our servers.
+            Please fill in the following details to {type} an appointment
           </DialogDescription>
         </DialogHeader>
+
+        <AppointmentForm 
+          user_id={user_id}
+          patient_id={patient_id}
+          type={type}
+          appointment={appointment}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
 
